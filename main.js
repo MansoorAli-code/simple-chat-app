@@ -1,37 +1,38 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Route to handle login and store username in local storage
-app.post('/login', (req, res) => {
-    const username = req.body.username;
-    res.cookie('username', username); // Store username in cookie
-    res.redirect('/send-message');
+// Routes
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Route to handle sending messages
-app.post('/send-message', (req, res) => {
-    const username = req.cookies.username;
-    const message = req.body.message;
-    const data = `${username}: ${message}\n`;
-    fs.appendFileSync('messages.txt', data); // Append message to file
-    res.redirect('/send-message');
-});
-
-// Route to serve the send message form
 app.get('/send-message', (req, res) => {
-    res.sendFile(__dirname + '/send-message.html');
+    res.sendFile(path.join(__dirname, 'views', 'send-message.html'));
 });
 
-// Route to serve messages
-app.get('/messages', (req, res) => {
-    const messages = fs.readFileSync('messages.txt', 'utf8');
-    res.send(messages);
+app.get('/contactus', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'contact-us.html'));
+});
+
+app.post('/success', (req, res) => {
+    // Process form submission here
+    res.redirect('/success');
+});
+
+app.get('/success', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'success.html'));
+});
+
+// 404 Route
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', 'not-found.html'));
 });
 
 app.listen(port, () => {
