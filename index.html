@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message</title>
+</head>
+
+<body>
+    <h1>Send Message</h1>
+    <form action="/send-message" method="POST">
+        <label for="message">Message:</label><br>
+        <input type="text" id="message" name="message"><br>
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        // Automatically fill the message input field
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        document.getElementById('message').value = `Hi, ${username}! `;
+    </script>
+</body>
+
+</html>
